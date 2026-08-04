@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDF to Word - PDFCraft</title>
+    <title>PDF to Excel - PDFCraft</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -58,11 +58,35 @@
             <a href="#" class="dev-tool-link hover:text-brand-500 transition"
               >COMPRESS PDF</a
             >
-            <a
-              href="pdf-to-word.html"
-              class="text-brand-500 font-bold transition"
-              >CONVERT PDF</a
-            >
+            <div class="relative group">
+              <a
+                href="index.html"
+                class="hover:text-brand-500 transition flex items-center gap-1 py-1 text-brand-500 font-bold"
+              >
+                CONVERT PDF
+                <i
+                  class="fa-solid fa-chevron-down text-xs transition-transform group-hover:rotate-180"
+                ></i>
+              </a>
+              <div
+                class="absolute left-0 mt-1 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50"
+              >
+                <a
+                  href="pdf-to-word.html"
+                  class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-500 transition flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-file-word text-brand-500 w-4"></i> PDF
+                  to Word
+                </a>
+                <a
+                  href="pdf-to-excel.html"
+                  class="block px-4 py-2 text-xs font-semibold text-brand-500 bg-brand-50 transition flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-file-excel text-brand-500 w-4"></i> PDF
+                  to Excel
+                </a>
+              </div>
+            </div>
             <div class="relative group">
               <a
                 href="index.html"
@@ -74,7 +98,7 @@
                 ></i>
               </a>
               <div
-                class="absolute left-15 mt-1 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50"
+                class="absolute left-0 mt-1 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50"
               >
                 <a
                   href="merge-pdf.html"
@@ -97,34 +121,6 @@
                   <i class="fa-solid fa-rotate text-brand-500 w-4"></i> Rotate
                   PDF
                 </a>
-                <a
-                  href="#"
-                  class="dev-tool-link block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-500 transition flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-compress text-brand-500 w-4"></i>
-                  Compress PDF
-                </a>
-                <a
-                  href="pdf-to-word.html"
-                  class="block px-4 py-2 text-xs font-semibold text-brand-500 bg-brand-50 transition flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-file-arrow-down text-brand-500 w-4"></i>
-                  PDF to Word
-                </a>
-                <!-- <a
-                  href="#"
-                  class="dev-tool-link block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-500 transition flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-unlock-keyhole text-brand-500 w-4"></i>
-                  Unlock PDF
-                </a>
-                <a
-                  href="#"
-                  class="dev-tool-link block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-500 transition flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-stamp text-brand-500 w-4"></i> Watermark
-                  PDF
-                </a> -->
               </div>
             </div>
           </nav>
@@ -156,18 +152,18 @@
       >
         <div class="text-center max-w-xl mx-auto mb-8 pointer-events-none">
           <div
-            class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 text-brand-500 rounded-2xl mb-4 text-2xl shadow-sm"
+            class="inline-flex items-center justify-center w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl mb-4 text-2xl shadow-sm border border-emerald-100"
           >
-            <i class="fa-solid fa-file-word"></i>
+            <i class="fa-solid fa-file-excel"></i>
           </div>
           <h1
             class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3"
           >
-            Convert PDF to Word
+            Convert PDF to Excel
           </h1>
           <p class="text-slate-600 text-base">
-            Convert your PDF to an editable Word document online. Accurate
-            extraction of text, images, and tables.
+            Pull data straight from your PDFs into Excel spreadsheets. Accurate
+            data extraction using cloud servers.
           </p>
         </div>
         <label
@@ -234,9 +230,9 @@
             <div class="flex items-center gap-4 text-slate-400">
               <i class="fa-solid fa-arrow-right-long text-xl animate-pulse"></i>
               <div
-                class="w-16 h-16 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-blue-100"
+                class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100"
               >
-                <i class="fa-solid fa-file-word"></i>
+                <i class="fa-solid fa-file-excel"></i>
               </div>
             </div>
           </div>
@@ -250,19 +246,19 @@
             <h2
               class="text-xl font-extrabold text-slate-900 mb-6 pb-4 border-b border-slate-100"
             >
-              PDF to Word
+              PDF to Excel
             </h2>
 
             <div
-              class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-sky-800 text-xs flex items-start space-x-3 mb-6 transition-all duration-300"
+              class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 text-xs flex items-start space-x-3 mb-6 transition-all duration-300"
             >
               <i
-                class="fa-solid fa-bolt text-sky-500 mt-0.5 shrink-0 text-sm"
+                class="fa-solid fa-table-cells text-emerald-500 mt-0.5 shrink-0 text-sm"
               ></i>
               <p class="leading-relaxed">
-                <strong>Premium Conversion:</strong> Powered by advanced cloud
-                servers to ensure the highest accuracy. Layouts, tables, and
-                fonts are preserved natively in DOCX format.
+                <strong>Table Extraction:</strong> Our cloud engine detects
+                tables inside your PDF and perfectly maps the columns and rows
+                into an editable XLSX file.
               </p>
             </div>
           </div>
@@ -272,7 +268,7 @@
               id="convertBtn"
               class="w-full py-4 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/30 transition flex items-center justify-center gap-2 text-lg"
             >
-              Convert to Word <i class="fa-solid fa-arrow-right"></i>
+              Convert to Excel <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -296,23 +292,23 @@
         </button>
 
         <div
-          class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
+          class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
         >
-          <i class="fa-solid fa-file-word"></i>
+          <i class="fa-solid fa-file-excel"></i>
         </div>
         <h3 class="text-2xl font-black text-slate-900 mb-2">
           PDF Successfully Converted!
         </h3>
         <p class="text-slate-600 text-sm mb-8">
-          Your Word document is ready to download.
+          Your Spreadsheet is ready to download.
         </p>
         <div class="space-y-3">
           <a
             id="downloadLink"
             href="#"
-            class="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 block"
+            class="w-full py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 block"
           >
-            <i class="fa-solid fa-download"></i> Download DOCX File
+            <i class="fa-solid fa-download"></i> Download XLSX File
           </a>
           <button
             id="closeModalBtn"
@@ -336,46 +332,11 @@
           class="w-16 h-16 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mb-4"
         ></div>
         <h4 id="loadingTitle" class="text-lg font-bold text-slate-900">
-          Converting to Word...
+          Converting to Excel...
         </h4>
         <p id="loadingSubtitle" class="text-xs text-slate-500 mt-1">
-          Uploading to cloud server...
+          Extracting tables in cloud server...
         </p>
-      </div>
-    </div>
-
-    <!-- Development Modal Popup (Untuk Menu Lain) -->
-    <div
-      id="devModal"
-      class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden"
-    >
-      <div
-        class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl text-center transform transition-all relative"
-      >
-        <button
-          id="closeDevModalXBtn"
-          class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition bg-slate-100 hover:bg-slate-200"
-          title="Close"
-        >
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-        <div
-          class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
-        >
-          <i class="fa-solid fa-person-digging"></i>
-        </div>
-        <h3 class="text-2xl font-black text-slate-900 mb-2">
-          Tahap Pengembangan
-        </h3>
-        <p class="text-slate-600 text-sm mb-8">
-          Fitur ini sedang dalam tahap pengembangan, mohon bersabar ya!
-        </p>
-        <button
-          id="closeDevModalBtn"
-          class="w-full py-3.5 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/30 transition"
-        >
-          Mengerti
-        </button>
       </div>
     </div>
 
@@ -414,7 +375,6 @@
         handleFileSelect(e.target.files[0]),
       );
 
-      // Global Drag & Drop dengan Efek Visual
       window.addEventListener("dragover", (e) => {
         e.preventDefault();
         if (!initialUploadState.classList.contains("hidden")) {
@@ -465,16 +425,12 @@
         activeWorkspace.classList.remove("hidden");
       }
 
-      // =========================================================
-      // KIRIM MELALUI GOOGLE APPS SCRIPT RILL TIME FIXXX
-      // =========================================================
-
-      // Fungsi tambahan untuk mengubah file PDF fisik menjadi teks (Base64)
+      // Fungsi mengubah PDF ke teks Base64
       function convertFileToBase64(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result.split(",")[1]); // Ambil teks Base64-nya saja
+          reader.onload = () => resolve(reader.result.split(",")[1]);
           reader.onerror = (error) => reject(error);
         });
       }
@@ -486,32 +442,31 @@
         loadingSubtitle.textContent = "Uploading to secure server...";
 
         try {
-          // 1. Ubah file PDF ke bentuk Base64 sebelum dikirim
           const base64Data = await convertFileToBase64(loadedFile);
 
+          // PAYLOAD KITA SEKARANG MENYERTAKAN 'targetFormat'
           const payloadData = {
             fileName: loadedFile.name,
             fileData: base64Data,
-            targetFormat: "docx",
+            targetFormat: "xlsx", // <--- KUNCI UTAMANYA DI SINI
           };
 
+          // TEMPELKAN URL WEB APP GOOGLE APPS SCRIPT (YANG BARU) DI BAWAH INI
           const GOOGLE_APPS_SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbwL6FKCrr7WR-WYaOo5aHChdruW-e_QJoUrUAS9nacAUYkbXVcLg8CnKya-lRCUkhtv/exec";
 
-          // 2. Kirim data ke Apps Script
           const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(payloadData),
-            redirect: "follow", // <--- Tambahkan baris ini
+            redirect: "follow",
           });
 
           if (!response.ok) throw new Error("Gagal menghubungi Apps Script");
 
-          loadingSubtitle.textContent = "Generating high-quality DOCX...";
+          loadingSubtitle.textContent = "Generating Spreadsheet...";
           const result = await response.json();
 
-          // 3. Menangani respon
           if (
             result.status === "success" &&
             result.data.Files &&
@@ -519,7 +474,6 @@
           ) {
             const originalName = loadedFile.name.replace(/\.[^/.]+$/, "");
 
-            // Ekstrak hasil Base64 DOCX dari ConvertAPI (melalui Apps Script)
             const returnedBase64 = result.data.Files[0].FileData;
             const byteCharacters = atob(returnedBase64);
             const byteNumbers = new Array(byteCharacters.length);
@@ -528,14 +482,13 @@
             }
             const byteArray = new Uint8Array(byteNumbers);
 
-            // Rakit menjadi file Microsoft Word
+            // BUNGKUS SEBAGAI FILE MICROSOFT EXCEL (.xlsx)
             const blob = new Blob([byteArray], {
-              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
 
-            // Siapkan untuk di-download
             downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = `${originalName}_pdfcraft.docx`;
+            downloadLink.download = `${originalName}_pdfcraft.xlsx`;
 
             loadingOverlay.classList.add("hidden");
             successModal.classList.remove("hidden");
@@ -558,29 +511,9 @@
       closeModalBtn.addEventListener("click", returnToIndex);
       closeModalXBtn.addEventListener("click", returnToIndex);
 
-      const devModal = document.getElementById("devModal");
-      const closeDevModalBtn = document.getElementById("closeDevModalBtn");
-      const closeDevModalXBtn = document.getElementById("closeDevModalXBtn");
-
-      function showDevModal(e) {
-        e.preventDefault();
-        devModal.classList.remove("hidden");
-      }
-      function hideDevModal() {
-        devModal.classList.add("hidden");
-      }
-
-      document.querySelectorAll(".dev-tool-link").forEach((link) => {
-        link.addEventListener("click", showDevModal);
-      });
-
-      closeDevModalBtn.addEventListener("click", hideDevModal);
-      closeDevModalXBtn.addEventListener("click", hideDevModal);
-
       window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          if (!successModal.classList.contains("hidden")) returnToIndex();
-          if (!devModal.classList.contains("hidden")) hideDevModal();
+        if (e.key === "Escape" && !successModal.classList.contains("hidden")) {
+          returnToIndex();
         }
       });
     </script>
