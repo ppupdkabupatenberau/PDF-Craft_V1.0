@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Merge PDF - PDFCraft</title>
+    <title>PDF to Word - PDFCraft</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -25,14 +25,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <!-- Include pdf-lib for merging -->
-    <script src="https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js"></script>
-    <!-- Include pdf.js for rendering PDF thumbnails in merge cards -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-    </script>
   </head>
   <body
     class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between overflow-x-hidden"
@@ -54,7 +46,7 @@
           <nav
             class="hidden md:flex space-x-6 text-sm font-semibold text-slate-600"
           >
-            <a href="merge-pdf.html" class="text-brand-500 font-bold transition"
+            <a href="merge-pdf.html" class="hover:text-brand-500 transition"
               >MERGE PDF</a
             >
             <a href="split-pdf.html" class="hover:text-brand-500 transition"
@@ -66,7 +58,9 @@
             <a href="#" class="dev-tool-link hover:text-brand-500 transition"
               >COMPRESS PDF</a
             >
-            <a href="pdf-to-word.html" class="hover:text-brand-500 transition"
+            <a
+              href="pdf-to-word.html"
+              class="text-brand-500 font-bold transition"
               >CONVERT PDF</a
             >
             <div class="relative group">
@@ -112,7 +106,7 @@
                 </a>
                 <a
                   href="pdf-to-word.html"
-                  class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-500 transition flex items-center gap-2"
+                  class="block px-4 py-2 text-xs font-semibold text-brand-500 bg-brand-50 transition flex items-center gap-2"
                 >
                   <i class="fa-solid fa-file-arrow-down text-brand-500 w-4"></i>
                   PDF to Word
@@ -158,38 +152,37 @@
       <!-- Initial Upload Center State -->
       <div
         id="initialUploadState"
-        class="flex-grow flex flex-col items-center justify-center p-8 bg-slate-100 border-2 border-dashed border-transparent transition"
+        class="flex-grow flex flex-col items-center justify-center p-8 bg-slate-100 border-2 border-dashed border-transparent transition duration-300"
       >
         <div class="text-center max-w-xl mx-auto mb-8 pointer-events-none">
           <div
             class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 text-brand-500 rounded-2xl mb-4 text-2xl shadow-sm"
           >
-            <i class="fa-solid fa-object-ungroup"></i>
+            <i class="fa-solid fa-file-word"></i>
           </div>
           <h1
             class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3"
           >
-            Merge PDF files
+            Convert PDF to Word
           </h1>
           <p class="text-slate-600 text-base">
-            Combine PDFs in the order you want with the easiest PDF merger
-            available.
+            Convert your PDF to an editable Word document online. Accurate
+            extraction of text, images, and tables.
           </p>
         </div>
         <label
           class="px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 cursor-pointer transition transform hover:scale-105 flex items-center gap-3 text-lg z-10"
         >
-          <i class="fa-solid fa-cloud-arrow-up text-xl"></i> Select PDF files
+          <i class="fa-solid fa-cloud-arrow-up text-xl"></i> Select PDF file
           <input
             type="file"
             id="initialFileInput"
-            multiple
             accept=".pdf"
             class="hidden"
           />
         </label>
         <p class="text-xs text-slate-400 mt-4 pointer-events-none">
-          or drop PDFs here from your computer
+          or drop PDF here from your computer
         </p>
       </div>
 
@@ -198,45 +191,54 @@
         id="activeWorkspace"
         class="flex-grow flex flex-col lg:flex-row hidden w-full"
       >
-        <!-- Left Area: Draggable Cards Grid -->
+        <!-- Left Area: File Preview -->
         <div
-          class="flex-grow bg-slate-100 p-6 sm:p-10 relative min-h-[80vh] flex flex-col"
+          class="flex-grow bg-slate-100 p-6 sm:p-10 relative min-h-[80vh] flex flex-col items-center justify-center overflow-y-auto"
         >
-          <!-- Floating Top-Right Action Badges -->
-          <div class="absolute top-6 right-6 flex items-center space-x-3 z-10">
+          <div class="absolute top-6 left-6 flex items-center space-x-3 z-10">
             <label
-              class="w-10 h-10 bg-brand-500 hover:bg-brand-600 text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer transition relative group"
-              title="Add more files"
+              class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-xl shadow border border-slate-200 cursor-pointer transition flex items-center gap-2"
             >
-              <i class="fa-solid fa-plus font-bold"></i>
-              <span
-                id="fileBadgeCount"
-                class="absolute -top-1 -right-1 bg-slate-900 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold border-2 border-white shadow"
-                >0</span
-              >
+              <i class="fa-solid fa-folder-open text-brand-500"></i> Change file
               <input
                 type="file"
-                id="addMoreInput"
-                multiple
+                id="changeFileInput"
                 accept=".pdf"
                 class="hidden"
               />
             </label>
-            <button
-              id="sortBtn"
-              class="w-10 h-10 bg-white hover:bg-slate-50 text-slate-700 rounded-full flex items-center justify-center shadow border border-slate-200 transition"
-              title="Sort A-Z"
-            >
-              <i class="fa-solid fa-arrow-down-z-a text-xs"></i>
-            </button>
           </div>
 
-          <!-- Cards Grid -->
+          <!-- Single File Preview Card -->
           <div
-            id="pdfGrid"
-            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 pt-12"
+            class="bg-white rounded-3xl shadow-lg border border-slate-200 p-8 flex flex-col items-center max-w-sm w-full text-center relative group"
           >
-            <!-- Dynamic PDF Cards -->
+            <div
+              class="w-24 h-24 bg-brand-50 text-brand-500 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm"
+            >
+              <i class="fa-regular fa-file-pdf"></i>
+            </div>
+            <h3
+              id="previewFileName"
+              class="text-lg font-bold text-slate-900 truncate w-full mb-2"
+            >
+              document.pdf
+            </h3>
+            <p
+              id="previewFileSize"
+              class="text-sm text-slate-500 mb-6 font-medium"
+            >
+              0 KB
+            </p>
+
+            <div class="flex items-center gap-4 text-slate-400">
+              <i class="fa-solid fa-arrow-right-long text-xl animate-pulse"></i>
+              <div
+                class="w-16 h-16 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-blue-100"
+              >
+                <i class="fa-solid fa-file-word"></i>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -248,40 +250,29 @@
             <h2
               class="text-xl font-extrabold text-slate-900 mb-6 pb-4 border-b border-slate-100"
             >
-              Merge PDF
+              PDF to Word
             </h2>
 
             <div
-              class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-sky-800 text-sm flex items-start space-x-3 mb-6"
+              class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-sky-800 text-xs flex items-start space-x-3 mb-6 transition-all duration-300"
             >
               <i
-                class="fa-solid fa-circle-info text-sky-500 mt-0.5 shrink-0 text-base"
+                class="fa-solid fa-bolt text-sky-500 mt-0.5 shrink-0 text-sm"
               ></i>
               <p class="leading-relaxed">
-                Drag and drop files from your computer anywhere on the screen to
-                add them, or drag cards to reorder.
+                <strong>Premium Conversion:</strong> Powered by advanced cloud
+                servers to ensure the highest accuracy. Layouts, tables, and
+                fonts are preserved natively in DOCX format.
               </p>
-            </div>
-
-            <div
-              class="flex justify-between items-center text-xs text-slate-500 mb-4 px-1"
-            >
-              <span id="sidebarFileCount">0 files selected</span>
-              <button
-                id="clearAllBtn"
-                class="text-red-500 hover:text-red-700 font-semibold transition"
-              >
-                Clear All
-              </button>
             </div>
           </div>
 
           <div class="pt-6 border-t border-slate-100">
             <button
-              id="mergeBtn"
+              id="convertBtn"
               class="w-full py-4 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/30 transition flex items-center justify-center gap-2 text-lg"
             >
-              Merge PDF <i class="fa-solid fa-arrow-right"></i>
+              Convert to Word <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -296,7 +287,6 @@
       <div
         class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl text-center transform transition-all relative"
       >
-        <!-- Close (X) button at top right -->
         <button
           id="closeModalXBtn"
           class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition bg-slate-100 hover:bg-slate-200"
@@ -306,29 +296,29 @@
         </button>
 
         <div
-          class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
+          class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
         >
-          <i class="fa-solid fa-circle-check"></i>
+          <i class="fa-solid fa-file-word"></i>
         </div>
         <h3 class="text-2xl font-black text-slate-900 mb-2">
-          PDFs Successfully Merged!
+          PDF Successfully Converted!
         </h3>
         <p class="text-slate-600 text-sm mb-8">
-          Your combined PDF file is ready to download.
+          Your Word document is ready to download.
         </p>
         <div class="space-y-3">
           <a
             id="downloadLink"
             href="#"
-            class="w-full py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 block"
+            class="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2 block"
           >
-            <i class="fa-solid fa-download"></i> Download Merged PDF
+            <i class="fa-solid fa-download"></i> Download DOCX File
           </a>
           <button
             id="closeModalBtn"
             class="w-full py-3 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition"
           >
-            Merge More PDFs
+            Convert More PDFs
           </button>
         </div>
       </div>
@@ -345,12 +335,16 @@
         <div
           class="w-16 h-16 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mb-4"
         ></div>
-        <h4 class="text-lg font-bold text-slate-900">Merging your PDFs...</h4>
-        <p class="text-xs text-slate-500 mt-1">Please wait a moment</p>
+        <h4 id="loadingTitle" class="text-lg font-bold text-slate-900">
+          Converting to Word...
+        </h4>
+        <p id="loadingSubtitle" class="text-xs text-slate-500 mt-1">
+          Uploading to cloud server...
+        </p>
       </div>
     </div>
 
-    <!-- Development Modal Popup -->
+    <!-- Development Modal Popup (Untuk Menu Lain) -->
     <div
       id="devModal"
       class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden"
@@ -378,7 +372,7 @@
         </p>
         <button
           id="closeDevModalBtn"
-          class="w-full py-3.5 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-lg shadow-brand-500/30 transition"
+          class="w-full py-3.5 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/30 transition"
         >
           Mengerti
         </button>
@@ -392,208 +386,176 @@
       <p>&copy; 2026 PDFCraft. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript with Global External File Drop Support and Return to Index on Modal Close -->
+    <!-- JavaScript API Integration -->
     <script>
-      const dropZoneContainer = document.getElementById("dropZoneContainer");
       const initialUploadState = document.getElementById("initialUploadState");
       const activeWorkspace = document.getElementById("activeWorkspace");
       const initialFileInput = document.getElementById("initialFileInput");
-      const addMoreInput = document.getElementById("addMoreInput");
-      const pdfGrid = document.getElementById("pdfGrid");
-      const fileBadgeCount = document.getElementById("fileBadgeCount");
-      const sidebarFileCount = document.getElementById("sidebarFileCount");
-      const clearAllBtn = document.getElementById("clearAllBtn");
-      const sortBtn = document.getElementById("sortBtn");
-      const mergeBtn = document.getElementById("mergeBtn");
+      const changeFileInput = document.getElementById("changeFileInput");
+      const previewFileName = document.getElementById("previewFileName");
+      const previewFileSize = document.getElementById("previewFileSize");
+      const convertBtn = document.getElementById("convertBtn");
 
       const successModal = document.getElementById("successModal");
       const downloadLink = document.getElementById("downloadLink");
       const closeModalBtn = document.getElementById("closeModalBtn");
       const closeModalXBtn = document.getElementById("closeModalXBtn");
+
       const loadingOverlay = document.getElementById("loadingOverlay");
+      const loadingSubtitle = document.getElementById("loadingSubtitle");
 
-      let selectedFiles = []; // Array of objects: { file, arrayBuffer, pdfProxy }
-      let draggedIndex = null;
+      let loadedFile = null;
 
+      // File Selection Handlers
       initialFileInput.addEventListener("change", (e) =>
-        addFiles(Array.from(e.target.files)),
+        handleFileSelect(e.target.files[0]),
       );
-      addMoreInput.addEventListener("change", (e) =>
-        addFiles(Array.from(e.target.files)),
+      changeFileInput.addEventListener("change", (e) =>
+        handleFileSelect(e.target.files[0]),
       );
 
-      // Global Drag & Drop from Laptop File Explorer
+      // Global Drag & Drop dengan Efek Visual
       window.addEventListener("dragover", (e) => {
         e.preventDefault();
+        if (!initialUploadState.classList.contains("hidden")) {
+          initialUploadState.classList.add("bg-brand-50", "border-brand-500");
+        }
+      });
+
+      window.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        if (!initialUploadState.classList.contains("hidden")) {
+          initialUploadState.classList.remove(
+            "bg-brand-50",
+            "border-brand-500",
+          );
+        }
       });
 
       window.addEventListener("drop", async (e) => {
         e.preventDefault();
+        initialUploadState.classList.remove("bg-brand-50", "border-brand-500");
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          const files = Array.from(e.dataTransfer.files).filter(
+          const pdfFile = Array.from(e.dataTransfer.files).find(
             (f) => f.type === "application/pdf",
           );
-          if (files.length > 0) {
-            await addFiles(files);
+          if (pdfFile) {
+            await handleFileSelect(pdfFile);
           }
         }
       });
 
-      async function addFiles(files) {
-        for (let file of files) {
-          if (file.type === "application/pdf") {
-            try {
-              const arrayBuffer = await file.arrayBuffer();
-              const loadingTask = pdfjsLib.getDocument({
-                data: arrayBuffer.slice(0),
-              });
-              const pdfProxy = await loadingTask.promise;
-              selectedFiles.push({ file, arrayBuffer, pdfProxy });
-            } catch (err) {
-              selectedFiles.push({
-                file,
-                arrayBuffer: await file.arrayBuffer(),
-                pdfProxy: null,
-              });
-            }
-          }
-        }
-        updateUI();
+      function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return "0 Bytes";
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
       }
 
-      async function updateUI() {
-        if (selectedFiles.length > 0) {
-          initialUploadState.classList.add("hidden");
-          activeWorkspace.classList.remove("hidden");
-        } else {
-          initialUploadState.classList.remove("hidden");
-          activeWorkspace.classList.add("hidden");
-        }
+      async function handleFileSelect(file) {
+        if (!file || file.type !== "application/pdf") return;
+        loadedFile = file;
 
-        fileBadgeCount.textContent = selectedFiles.length;
-        sidebarFileCount.textContent = selectedFiles.length + " files selected";
-        pdfGrid.innerHTML = "";
+        previewFileName.textContent = file.name;
+        previewFileSize.textContent = formatBytes(file.size);
 
-        selectedFiles.forEach((itemObj, index) => {
-          const card = document.createElement("div");
-          card.className =
-            "bg-white rounded-2xl border-2 border-slate-200 p-3 flex flex-col items-center relative group hover:border-brand-500 hover:shadow-lg transition cursor-grab active:cursor-grabbing";
-          card.setAttribute("draggable", "true");
-          card.dataset.index = index;
+        initialUploadState.classList.add("hidden");
+        activeWorkspace.classList.remove("hidden");
+      }
 
-          card.innerHTML = `
-                    <div class="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] px-2 py-0.5 rounded-md font-bold z-10">#${index + 1}</div>
-                    <button onclick="removeFile(${index})" class="absolute top-2 right-2 text-slate-400 hover:text-red-500 bg-white/90 hover:bg-white rounded-full w-6 h-6 flex items-center justify-center shadow opacity-0 group-hover:opacity-100 transition z-10" title="Delete">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-                    <div class="w-full h-36 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center mb-3 overflow-hidden relative">
-                        <canvas id="merge-canvas-${index}" class="max-h-full max-w-full object-contain"></canvas>
-                    </div>
-                    <p class="text-xs font-semibold text-slate-700 text-center truncate w-full px-1" title="${itemObj.file.name}">${itemObj.file.name}</p>
-                `;
+      // =========================================================
+      // KIRIM MELALUI GOOGLE APPS SCRIPT RILL TIME FIXXX
+      // =========================================================
 
-          card.addEventListener("dragstart", (e) => {
-            draggedIndex = index;
-            e.dataTransfer.effectAllowed = "move";
-            setTimeout(() => card.classList.add("opacity-40", "scale-95"), 0);
-          });
-
-          card.addEventListener("dragend", () => {
-            card.classList.remove("opacity-40", "scale-95");
-            draggedIndex = null;
-          });
-
-          card.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = "move";
-          });
-
-          card.addEventListener("drop", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (draggedIndex === null || draggedIndex === index) return;
-
-            const movedItem = selectedFiles.splice(draggedIndex, 1)[0];
-            selectedFiles.splice(index, 0, movedItem);
-            draggedIndex = index;
-            updateUI();
-          });
-
-          pdfGrid.appendChild(card);
-
-          if (itemObj.pdfProxy) {
-            itemObj.pdfProxy.getPage(1).then((page) => {
-              const canvas = document.getElementById(`merge-canvas-${index}`);
-              if (canvas) {
-                const context = canvas.getContext("2d");
-                const viewport = page.getViewport({ scale: 0.25 });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                page.render({ canvasContext: context, viewport: viewport });
-              }
-            });
-          }
+      // Fungsi tambahan untuk mengubah file PDF fisik menjadi teks (Base64)
+      function convertFileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result.split(",")[1]); // Ambil teks Base64-nya saja
+          reader.onerror = (error) => reject(error);
         });
       }
 
-      window.removeFile = function (index) {
-        selectedFiles.splice(index, 1);
-        updateUI();
-      };
-
-      clearAllBtn.addEventListener("click", () => {
-        selectedFiles = [];
-        initialFileInput.value = "";
-        addMoreInput.value = "";
-        updateUI();
-      });
-
-      sortBtn.addEventListener("click", () => {
-        selectedFiles.sort((a, b) => a.file.name.localeCompare(b.file.name));
-        updateUI();
-      });
-
-      mergeBtn.addEventListener("click", async () => {
-        if (selectedFiles.length < 1) return;
+      convertBtn.addEventListener("click", async () => {
+        if (!loadedFile) return;
 
         loadingOverlay.classList.remove("hidden");
+        loadingSubtitle.textContent = "Uploading to secure server...";
 
         try {
-          const { PDFDocument } = PDFLib;
-          const mergedPdf = await PDFDocument.create();
+          // 1. Ubah file PDF ke bentuk Base64 sebelum dikirim
+          const base64Data = await convertFileToBase64(loadedFile);
 
-          for (let itemObj of selectedFiles) {
-            const pdfDoc = await PDFDocument.load(itemObj.arrayBuffer);
-            const copiedPages = await mergedPdf.copyPages(
-              pdfDoc,
-              pdfDoc.getPageIndices(),
+          const payloadData = {
+            fileName: loadedFile.name,
+            fileData: base64Data,
+          };
+
+          const GOOGLE_APPS_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbyn49lTHznmwPPIy5GemGTA_Ajv7S09oQ2JgoKWss__iNDzkj5r7IUPmkLjON2I_aY/exec";
+
+          // 2. Kirim data ke Apps Script
+          const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payloadData),
+            redirect: "follow", // <--- Tambahkan baris ini
+          });
+
+          if (!response.ok) throw new Error("Gagal menghubungi Apps Script");
+
+          loadingSubtitle.textContent = "Generating high-quality DOCX...";
+          const result = await response.json();
+
+          // 3. Menangani respon
+          if (
+            result.status === "success" &&
+            result.data.Files &&
+            result.data.Files.length > 0
+          ) {
+            const originalName = loadedFile.name.replace(/\.[^/.]+$/, "");
+
+            // Ekstrak hasil Base64 DOCX dari ConvertAPI (melalui Apps Script)
+            const returnedBase64 = result.data.Files[0].FileData;
+            const byteCharacters = atob(returnedBase64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+
+            // Rakit menjadi file Microsoft Word
+            const blob = new Blob([byteArray], {
+              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+
+            // Siapkan untuk di-download
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${originalName}_pdfcraft.docx`;
+
+            loadingOverlay.classList.add("hidden");
+            successModal.classList.remove("hidden");
+          } else {
+            throw new Error(
+              result.message || "File tidak ditemukan dari server API",
             );
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
           }
-
-          const mergedPdfBytes = await mergedPdf.save();
-          const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-          downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = "merged-pdfcraft.pdf";
-
-          loadingOverlay.classList.add("hidden");
-          successModal.classList.remove("hidden");
         } catch (error) {
           console.error(error);
           loadingOverlay.classList.add("hidden");
-          alert("Terjadi kesalahan saat menggabungkan file PDF.");
+          alert("Konversi gagal! Terjadi kesalahan pada server perantara.");
         }
       });
 
-      // Function to return to index.html
+      // Modal Handlers
       function returnToIndex() {
         window.location.href = "index.html";
       }
-
       closeModalBtn.addEventListener("click", returnToIndex);
       closeModalXBtn.addEventListener("click", returnToIndex);
-
-      // Listen for ESC key to close modal and return to index
 
       const devModal = document.getElementById("devModal");
       const closeDevModalBtn = document.getElementById("closeDevModalBtn");
@@ -603,7 +565,6 @@
         e.preventDefault();
         devModal.classList.remove("hidden");
       }
-
       function hideDevModal() {
         devModal.classList.add("hidden");
       }
@@ -616,14 +577,9 @@
       closeDevModalXBtn.addEventListener("click", hideDevModal);
 
       window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !devModal.classList.contains("hidden")) {
-          hideDevModal();
-        }
-      });
-
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !successModal.classList.contains("hidden")) {
-          returnToIndex();
+        if (e.key === "Escape") {
+          if (!successModal.classList.contains("hidden")) returnToIndex();
+          if (!devModal.classList.contains("hidden")) hideDevModal();
         }
       });
     </script>
