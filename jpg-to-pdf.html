@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rotate PDF - PDFCraft</title>
+    <title>JPG to PDF - PDFCraft</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -25,13 +25,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <!-- Include pdf-lib and pdfjs-dist -->
-    <script src="https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-    </script>
+    <!-- Include jsPDF Library untuk Generate PDF Lokal di Browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body
     class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between overflow-x-hidden"
@@ -65,7 +60,7 @@
             <div class="relative group">
               <a
                 href="#"
-                class="text-brand-500 font-bold transition flex items-center gap-1 py-1"
+                class="hover:text-brand-500 transition flex items-center gap-1 py-1"
               >
                 CONVERT PDF
                 <i
@@ -73,7 +68,7 @@
                 ></i>
               </a>
               <div
-                class="absolute left-0 mt-0 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50"
+                class="absolute left-0 mt-1 w-56 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 hidden group-hover:block z-50"
               >
                 <a
                   href="pdf-to-word.html"
@@ -84,13 +79,18 @@
                 </a>
                 <a
                   href="pdf-to-excel.html"
-                  class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-500 transition flex items-center gap-2"
+                  class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-brand-50 hover:text-emerald-600 transition flex items-center gap-2"
                 >
                   <i class="fa-solid fa-file-excel text-emerald-600 w-4"></i>
                   PDF to Excel
                 </a>
               </div>
             </div>
+            <a
+              href="jpg-to-pdf.html"
+              class="text-brand-500 font-bold transition"
+              >JPG TO PDF</a
+            >
           </nav>
         </div>
         <div class="flex items-center space-x-3">
@@ -116,37 +116,38 @@
       <!-- Initial Upload Center State -->
       <div
         id="initialUploadState"
-        class="flex-grow flex flex-col items-center justify-center p-8 bg-slate-100 border-2 border-dashed border-transparent transition"
+        class="flex-grow flex flex-col items-center justify-center p-8 bg-slate-100 border-2 border-dashed border-transparent transition duration-300"
       >
         <div class="text-center max-w-xl mx-auto mb-8 pointer-events-none">
           <div
-            class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 text-brand-500 rounded-2xl mb-4 text-2xl shadow-sm"
+            class="inline-flex items-center justify-center w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl mb-4 text-2xl shadow-sm border border-amber-100"
           >
-            <i class="fa-solid fa-rotate"></i>
+            <i class="fa-solid fa-file-image"></i>
           </div>
           <h1
             class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3"
           >
-            Rotate PDF files
+            JPG to PDF Converter
           </h1>
           <p class="text-slate-600 text-base">
-            Rotate your PDFs the way you need them. You can rotate individual
-            pages or all pages at once!
+            Convert JPG, PNG, WEBP, or BMP images into a professional PDF
+            document instantly in your browser.
           </p>
         </div>
         <label
           class="px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/25 cursor-pointer transition transform hover:scale-105 flex items-center gap-3 text-lg z-10"
         >
-          <i class="fa-solid fa-cloud-arrow-up text-xl"></i> Select PDF file
+          <i class="fa-solid fa-cloud-arrow-up text-xl"></i> Select Images
           <input
             type="file"
             id="initialFileInput"
-            accept=".pdf"
+            accept=".jpg, .jpeg, .png, .webp, .bmp"
+            multiple
             class="hidden"
           />
         </label>
         <p class="text-xs text-slate-400 mt-4 pointer-events-none">
-          or drop PDF here from your computer
+          or drop images here from your computer
         </p>
       </div>
 
@@ -155,7 +156,7 @@
         id="activeWorkspace"
         class="flex-grow flex flex-col lg:flex-row hidden w-full"
       >
-        <!-- Left Area: Page Thumbnails Grid -->
+        <!-- Left Area: Images Thumbnail Grid -->
         <div
           class="flex-grow bg-slate-100 p-6 sm:p-10 relative min-h-[80vh] flex flex-col overflow-y-auto"
         >
@@ -163,22 +164,23 @@
             <label
               class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-xl shadow border border-slate-200 cursor-pointer transition flex items-center gap-2"
             >
-              <i class="fa-solid fa-folder-open text-brand-500"></i> Change file
+              <i class="fa-solid fa-plus text-brand-500"></i> Add more images
               <input
                 type="file"
-                id="changeFileInput"
-                accept=".pdf"
+                id="addMoreFileInput"
+                accept=".jpg, .jpeg, .png, .webp, .bmp"
+                multiple
                 class="hidden"
               />
             </label>
           </div>
 
-          <!-- Grid Thumbnail Halaman PDF -->
+          <!-- Grid Pratinjau Gambar -->
           <div
-            id="pagesGrid"
+            id="imagesGrid"
             class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6 pt-16 pb-12"
           >
-            <!-- Dynamic Page Cards -->
+            <!-- Kartu Gambar Dinamis -->
           </div>
         </div>
 
@@ -190,49 +192,31 @@
             <h2
               class="text-xl font-extrabold text-slate-900 mb-6 pb-4 border-b border-slate-100"
             >
-              Rotate PDF
+              JPG to PDF
             </h2>
 
-            <div class="mb-6">
-              <label
-                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3"
-                >Rotate all pages:</label
-              >
-              <div class="grid grid-cols-2 gap-2">
-                <button
-                  id="rotateAllLeftBtn"
-                  class="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2"
-                >
-                  <i class="fa-solid fa-rotate-left"></i> Left 90°
-                </button>
-                <button
-                  id="rotateAllRightBtn"
-                  class="py-3 px-4 bg-brand-50 hover:bg-brand-100 text-brand-600 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2"
-                >
-                  <i class="fa-solid fa-rotate-right"></i> Right 90°
-                </button>
-              </div>
-            </div>
-
             <div
-              class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-sky-800 text-xs flex items-start space-x-3 mb-6"
+              class="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-amber-900 text-xs flex items-start space-x-3 mb-6 transition-all duration-300"
             >
               <i
-                class="fa-solid fa-circle-info text-sky-500 mt-0.5 shrink-0 text-sm"
+                class="fa-solid fa-circle-info text-amber-600 mt-0.5 shrink-0 text-sm"
               ></i>
               <p class="leading-relaxed">
-                Click the rotate button on individual page cards to rotate them
-                separately, or use the buttons above to rotate all pages.
+                You can rotate images or use the arrow buttons (<i
+                  class="fa-solid fa-chevron-left"
+                ></i>
+                <i class="fa-solid fa-chevron-right"></i>) on each card to
+                change their sequence in the final PDF.
               </p>
             </div>
           </div>
 
           <div class="pt-6 border-t border-slate-100">
             <button
-              id="rotateBtn"
+              id="convertBtn"
               class="w-full py-4 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/30 transition flex items-center justify-center gap-2 text-lg"
             >
-              Rotate PDF <i class="fa-solid fa-arrow-right"></i>
+              Convert to PDF <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -261,10 +245,10 @@
           <i class="fa-solid fa-circle-check"></i>
         </div>
         <h3 class="text-2xl font-black text-slate-900 mb-2">
-          PDF Successfully Rotated!
+          PDF Successfully Created!
         </h3>
         <p class="text-slate-600 text-sm mb-8">
-          Your rotated PDF file is ready to download.
+          Your images have been converted into a single PDF file.
         </p>
         <div class="space-y-3">
           <a
@@ -272,13 +256,13 @@
             href="#"
             class="w-full py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-2 block"
           >
-            <i class="fa-solid fa-download"></i> Download Rotated PDF
+            <i class="fa-solid fa-download"></i> Download PDF File
           </a>
           <button
             id="closeModalBtn"
             class="w-full py-3 px-6 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-2xl transition"
           >
-            Rotate More PDFs
+            Convert More Images
           </button>
         </div>
       </div>
@@ -295,43 +279,12 @@
         <div
           class="w-16 h-16 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mb-4"
         ></div>
-        <h4 class="text-lg font-bold text-slate-900">Processing your PDF...</h4>
-        <p class="text-xs text-slate-500 mt-1">Please wait a moment</p>
-      </div>
-    </div>
-
-    <!-- Development Modal Popup -->
-    <div
-      id="devModal"
-      class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden"
-    >
-      <div
-        class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl text-center transform transition-all relative"
-      >
-        <button
-          id="closeDevModalXBtn"
-          class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition bg-slate-100 hover:bg-slate-200"
-          title="Close"
-        >
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-        <div
-          class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"
-        >
-          <i class="fa-solid fa-person-digging"></i>
-        </div>
-        <h3 class="text-2xl font-black text-slate-900 mb-2">
-          Tahap Pengembangan
-        </h3>
-        <p class="text-slate-600 text-sm mb-8">
-          Fitur ini sedang dalam tahap pengembangan, mohon bersabar ya!
+        <h4 id="loadingTitle" class="text-lg font-bold text-slate-900">
+          Generating PDF...
+        </h4>
+        <p id="loadingSubtitle" class="text-xs text-slate-500 mt-1">
+          Processing images locally...
         </p>
-        <button
-          id="closeDevModalBtn"
-          class="w-full py-3.5 px-6 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-2xl shadow-xl shadow-brand-500/30 transition"
-        >
-          Mengerti
-        </button>
       </div>
     </div>
 
@@ -342,196 +295,246 @@
       <p>&copy; 2026 PDFCraft. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript for Rotate PDF -->
+    <!-- JavaScript Client-Side PDF Generation Logic -->
     <script>
       const initialUploadState = document.getElementById("initialUploadState");
       const activeWorkspace = document.getElementById("activeWorkspace");
       const initialFileInput = document.getElementById("initialFileInput");
-      const changeFileInput = document.getElementById("changeFileInput");
-      const pagesGrid = document.getElementById("pagesGrid");
-      const rotateBtn = document.getElementById("rotateBtn");
-      const rotateAllLeftBtn = document.getElementById("rotateAllLeftBtn");
-      const rotateAllRightBtn = document.getElementById("rotateAllRightBtn");
+      const addMoreFileInput = document.getElementById("addMoreFileInput");
+      const imagesGrid = document.getElementById("imagesGrid");
+      const convertBtn = document.getElementById("convertBtn");
 
       const successModal = document.getElementById("successModal");
       const downloadLink = document.getElementById("downloadLink");
       const closeModalBtn = document.getElementById("closeModalBtn");
       const closeModalXBtn = document.getElementById("closeModalXBtn");
       const loadingOverlay = document.getElementById("loadingOverlay");
+      const loadingSubtitle = document.getElementById("loadingSubtitle");
 
-      let loadedFile = null;
-      let pdfDocProxy = null;
-      let totalPages = 0;
-      let pageRotations = {}; // pageNumber -> rotation angle (0, 90, 180, 270)
+      let imageItems = [];
 
       initialFileInput.addEventListener("change", (e) =>
-        handleFileSelect(e.target.files[0]),
+        handleFilesSelected(e.target.files),
       );
-      changeFileInput.addEventListener("change", (e) =>
-        handleFileSelect(e.target.files[0]),
+      addMoreFileInput.addEventListener("change", (e) =>
+        handleFilesSelected(e.target.files),
       );
 
-      // Global Drag & Drop
-      window.addEventListener("dragover", (e) => e.preventDefault());
+      window.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (!initialUploadState.classList.contains("hidden")) {
+          initialUploadState.classList.add("bg-brand-50", "border-brand-500");
+        }
+      });
+
+      window.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        if (!initialUploadState.classList.contains("hidden")) {
+          initialUploadState.classList.remove(
+            "bg-brand-50",
+            "border-brand-500",
+          );
+        }
+      });
+
       window.addEventListener("drop", async (e) => {
         e.preventDefault();
+        initialUploadState.classList.remove("bg-brand-50", "border-brand-500");
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          const pdfFile = Array.from(e.dataTransfer.files).find(
-            (f) => f.type === "application/pdf",
+          const validFiles = Array.from(e.dataTransfer.files).filter((f) =>
+            f.type.startsWith("image/"),
           );
-          if (pdfFile) {
-            await handleFileSelect(pdfFile);
+          if (validFiles.length > 0) {
+            handleFilesSelected(validFiles);
           }
         }
       });
 
-      async function handleFileSelect(file) {
-        if (!file || file.type !== "application/pdf") return;
-        loadedFile = file;
-        loadingOverlay.classList.remove("hidden");
-
-        try {
-          const arrayBuffer = await file.arrayBuffer();
-          const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-          pdfDocProxy = await loadingTask.promise;
-          totalPages = pdfDocProxy.numPages;
-
-          pageRotations = {};
-          for (let i = 1; i <= totalPages; i++) {
-            pageRotations[i] = 0;
+      function handleFilesSelected(files) {
+        Array.from(files).forEach((file) => {
+          if (file.type.startsWith("image/")) {
+            imageItems.push({
+              file: file,
+              rotation: 0,
+              url: URL.createObjectURL(file),
+            });
           }
+        });
 
+        if (imageItems.length > 0) {
           initialUploadState.classList.add("hidden");
           activeWorkspace.classList.remove("hidden");
-
-          await renderThumbnails();
-          loadingOverlay.classList.add("hidden");
-        } catch (err) {
-          console.error(err);
-          loadingOverlay.classList.add("hidden");
-          alert("Gagal membaca file PDF.");
+          renderGrid();
         }
       }
 
-      async function renderThumbnails() {
-        pagesGrid.innerHTML = "";
-        for (let i = 1; i <= totalPages; i++) {
-          const rotation = pageRotations[i] || 0;
-
+      function renderGrid() {
+        imagesGrid.innerHTML = "";
+        imageItems.forEach((item, index) => {
           const card = document.createElement("div");
           card.className =
             "bg-white rounded-2xl border-2 border-slate-200 p-3 flex flex-col items-center relative group hover:border-brand-500 shadow-sm transition";
 
           card.innerHTML = `
-                    <button type="button" onclick="rotatePage(${i})" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs shadow z-10 hover:bg-brand-600 transition" title="Rotate 90°">
+                    <button type="button" onclick="removeImage(${index})" class="absolute top-3 left-3 w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs shadow z-10 hover:bg-red-500 hover:text-white transition" title="Hapus Gambar">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+
+                    <button type="button" onclick="rotateImage(${index})" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-brand-500 text-white flex items-center justify-center text-xs shadow z-10 hover:bg-brand-600 transition" title="Putar 90°">
                         <i class="fa-solid fa-rotate-right"></i>
                     </button>
-                    <div class="w-full h-44 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center mb-3 overflow-hidden relative">
-                        <canvas id="canvas-${i}" class="max-h-full max-w-full object-contain transition-transform duration-300" style="transform: rotate(${rotation}deg);"></canvas>
+
+                    <div class="w-full h-40 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center mb-3 overflow-hidden relative">
+                        <img src="${item.url}" class="max-h-full max-w-full object-contain transition-transform duration-300" style="transform: rotate(${item.rotation}deg);" />
                     </div>
-                    <span class="text-xs font-bold text-slate-700">Page ${i} (${rotation}°)</span>
+
+                    <div class="w-full flex items-center justify-between mt-1 px-1">
+                        <button type="button" onclick="moveImage(${index}, -1)" ${index === 0 ? 'disabled class="text-slate-300 cursor-not-allowed"' : 'class="text-slate-600 hover:text-brand-500 transition"'}>
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <span class="text-xs font-bold text-slate-700">Page ${index + 1}</span>
+                        <button type="button" onclick="moveImage(${index}, 1)" ${index === imageItems.length - 1 ? 'disabled class="text-slate-300 cursor-not-allowed"' : 'class="text-slate-600 hover:text-brand-500 transition"'}>
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
                 `;
-
-          pagesGrid.appendChild(card);
-
-          // Render page via pdf.js
-          const page = await pdfDocProxy.getPage(i);
-          const canvas = document.getElementById(`canvas-${i}`);
-          const context = canvas.getContext("2d");
-          const viewport = page.getViewport({ scale: 0.3 });
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          await page.render({ canvasContext: context, viewport: viewport })
-            .promise;
-        }
+          imagesGrid.appendChild(card);
+        });
       }
 
-      window.rotatePage = function (pageNumber) {
-        pageRotations[pageNumber] = (pageRotations[pageNumber] + 90) % 360;
-        renderThumbnails();
+      window.rotateImage = function (index) {
+        imageItems[index].rotation = (imageItems[index].rotation + 90) % 360;
+        renderGrid();
       };
 
-      rotateAllLeftBtn.addEventListener("click", () => {
-        for (let i = 1; i <= totalPages; i++) {
-          pageRotations[i] = (pageRotations[i] - 90 + 360) % 360;
+      window.removeImage = function (index) {
+        URL.revokeObjectURL(imageItems[index].url);
+        imageItems.splice(index, 1);
+        if (imageItems.length === 0) {
+          activeWorkspace.classList.add("hidden");
+          initialUploadState.classList.remove("hidden");
+        } else {
+          renderGrid();
         }
-        renderThumbnails();
-      });
+      };
 
-      rotateAllRightBtn.addEventListener("click", () => {
-        for (let i = 1; i <= totalPages; i++) {
-          pageRotations[i] = (pageRotations[i] + 90) % 360;
-        }
-        renderThumbnails();
-      });
+      window.moveImage = function (index, direction) {
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= imageItems.length) return;
 
-      rotateBtn.addEventListener("click", async () => {
-        if (!loadedFile) return;
+        const temp = imageItems[index];
+        imageItems[index] = imageItems[targetIndex];
+        imageItems[targetIndex] = temp;
+        renderGrid();
+      };
+
+      // Helper untuk memproses rotasi fisik gambar via Canvas
+      async function getProcessedImageDataUrl(item) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            let width = img.width;
+            let height = img.height;
+            const rotation = item.rotation;
+
+            if (rotation === 90 || rotation === 270) {
+              canvas.width = height;
+              canvas.height = width;
+            } else {
+              canvas.width = width;
+              canvas.height = height;
+            }
+
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate((rotation * Math.PI) / 180);
+            ctx.drawImage(img, -width / 2, -height / 2);
+
+            resolve(canvas.toDataURL("image/jpeg", 0.9));
+          };
+          img.src = item.url;
+        });
+      }
+
+      // Proses Tombol Convert Menggunakan jsPDF (Lokal Browser)
+      convertBtn.addEventListener("click", async () => {
+        if (imageItems.length === 0) return;
+
         loadingOverlay.classList.remove("hidden");
+        loadingSubtitle.textContent = "Processing images and rotations...";
 
         try {
-          const arrayBuffer = await loadedFile.arrayBuffer();
-          const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-          const pages = pdfDoc.getPages();
-
-          pages.forEach((page, index) => {
-            const pageNum = index + 1;
-            const currentRotation = page.getRotation().angle;
-            const userRotation = pageRotations[pageNum] || 0;
-            page.setRotation(PDFLib.degrees(currentRotation + userRotation));
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4",
           });
 
-          const pdfBytes = await pdfDoc.save();
-          const blob = new Blob([pdfBytes], { type: "application/pdf" });
-          downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = "rotated-pdfcraft.pdf";
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+
+          for (let i = 0; i < imageItems.length; i++) {
+            if (i > 0) {
+              pdf.addPage();
+            }
+
+            const imgDataUrl = await getProcessedImageDataUrl(imageItems[i]);
+
+            await new Promise((resolve, reject) => {
+              const img = new Image();
+              img.onload = () => {
+                let imgWidth = img.width;
+                let imgHeight = img.height;
+
+                const margin = 10;
+                const maxWidth = pageWidth - margin * 2;
+                const maxHeight = pageHeight - margin * 2;
+
+                let ratio = Math.min(
+                  maxWidth / imgWidth,
+                  maxHeight / imgHeight,
+                );
+                let finalWidth = imgWidth * ratio;
+                let finalHeight = imgHeight * ratio;
+
+                let x = (pageWidth - finalWidth) / 2;
+                let y = (pageHeight - finalHeight) / 2;
+
+                pdf.addImage(imgDataUrl, "JPEG", x, y, finalWidth, finalHeight);
+                resolve();
+              };
+              img.onerror = reject;
+              img.src = imgDataUrl;
+            });
+          }
+
+          loadingSubtitle.textContent = "Generating final PDF...";
+          const pdfBlob = pdf.output("blob");
+
+          downloadLink.href = URL.createObjectURL(pdfBlob);
+          downloadLink.download = `converted_images_pdfcraft.pdf`;
 
           loadingOverlay.classList.add("hidden");
           successModal.classList.remove("hidden");
         } catch (error) {
           console.error(error);
           loadingOverlay.classList.add("hidden");
-          alert("Terjadi kesalahan saat merotasi PDF.");
+          alert("Gagal menghasilkan PDF lokal. Silakan coba lagi.");
         }
       });
 
       function returnToIndex() {
         window.location.href = "index.html";
       }
-
       closeModalBtn.addEventListener("click", returnToIndex);
       closeModalXBtn.addEventListener("click", returnToIndex);
 
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && !successModal.classList.contains("hidden")) {
           returnToIndex();
-        }
-      });
-
-      const devModal = document.getElementById("devModal");
-      const closeDevModalBtn = document.getElementById("closeDevModalBtn");
-      const closeDevModalXBtn = document.getElementById("closeDevModalXBtn");
-
-      container = document; // standard binding
-      function showDevModal(e) {
-        e.preventDefault();
-        devModal.classList.remove("hidden");
-      }
-
-      function hideDevModal() {
-        devModal.classList.add("hidden");
-      }
-
-      document.querySelectorAll(".dev-tool-link").forEach((link) => {
-        link.addEventListener("click", showDevModal);
-      });
-
-      closeDevModalBtn.addEventListener("click", hideDevModal);
-      closeDevModalXBtn.addEventListener("click", hideDevModal);
-
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !devModal.classList.contains("hidden")) {
-          hideDevModal();
         }
       });
     </script>
